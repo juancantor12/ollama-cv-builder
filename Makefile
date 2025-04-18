@@ -4,7 +4,7 @@ install:
 	pip install -r requirements.txt
 
 lint:
-	ruff src/ tests/
+	ruff check src/ tests/
 
 format:
 	black src/ tests/

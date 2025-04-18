@@ -16,7 +16,10 @@ jobs:
         pip install -r requirements.txt
     - name: Lint
       run: |
-        ruff src/ tests/
+        make lint
+    - name: Format
+      run: |
+        make format
     - name: Test
       run: |
-        pytest tests/
+        make test
