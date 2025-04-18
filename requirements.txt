@@ -1,0 +1,7 @@
+ruff
+black
+pytest
+python-dotenv
+requests
+python-docx
+ollama
