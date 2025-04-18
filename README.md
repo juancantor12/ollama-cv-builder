@@ -1,6 +1,6 @@
 # Resume Generator (Local, Privacy-First)
 
-[![CI Build](https://img.shields.io/github/actions/workflow/status/juancantor12/ollama-cv-builder/ci.yml?branch=main)](https://github.com/juancantor12/ollama-cv-builder/actions)
+[![CI Build](https://img.shields.io/github/actions/workflow/status/juancantor12/ollama-cv-builder/ci.yml?branch=master)](https://github.com/juancantor12/ollama-cv-builder/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ---
