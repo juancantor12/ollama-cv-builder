@@ -1,0 +1,57 @@
+{
+	"profile_info": {
+		"name": "",
+		"tittle": "",
+		"intro": "",
+		"bio": "",
+		"location": "",
+		"email": ""
+	},
+	"education": [
+		{
+			"collegue": "",
+			"location": "",
+			"degree": "",
+			"date": "",
+			"bullet_list": [
+				"",
+				""
+			]
+		}
+	],
+	"experience": [
+		{
+			"position": "",
+			"company": "",
+			"location": "",
+			"contract_type": "",
+			"duration": "",
+			"bullet_list": [
+				"",
+				""
+			],
+			"skills": [
+				"",
+				""
+			]
+		}
+	],
+	"continuous_learning": [
+		{
+			"title": "",
+			"description": ""
+		}
+	],
+	"personal_projects": [
+		{
+			"title": "",
+			"description": ""
+		}
+	],
+	"personal_development":[
+		{
+			"title": "",
+			"description": ""
+		}
+	]
+}
