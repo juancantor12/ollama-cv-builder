@@ -1,6 +1,6 @@
 # Resume Generator (Local, Privacy-First)
 
-[![CI Build](https://img.shields.io/github/actions/workflow/status/juancantor12/ollama-cv-builder/ci.yml?branch=main)](https://github.com/juancantor12/ollama-cv-builder/actions)
+[![CI Build](https://github.com/juancantor12/ollama-cv-builder/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/juancantor12/ollama-cv-builder/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ---
@@ -20,31 +20,6 @@ It parses a job description fetched from a URL, summarizes key requirements, and
 
 ---
 
-## Project Structure
-.gitignore
-.github/
-	└── workflows/
-		└── ci.yml 		# CI Pipeline
-output/
-data/
-├── cv_info_template.json
-├── cv_info_example.json
-src/
-└── resume_generator/ 
-	├── cli.py 			# Command-line interface 
-	├── fetcher.py 		# Fetch and clean job description 
-	├── summarizer.py 	# Summarize job text via local LLM  and creates a summary txt file
-	├── tailor.py 		# Tailors resume based on the job description file and the JSON resume data
-	├── generator.py 	# Builds the final ATS Friendly DOCX file
-	├── utils.py 		# Auxiliary functions 
-tests/					# Unit testing
-Makefile
-README.md
-requirements.txt
-run.sh 					# bash script to run the app
-
-
----
 
 ## Quick Start
 
@@ -109,7 +84,9 @@ Example folder name: output/data-scientist-acme-corp-20240418_143500/
 Inside each job-specific output folder, you will find:
 
 `summary.txt` | Cleaned and summarized job description
+
 `tailored_cv.json` | Tailored resume data aligned to the job
+
 `final_resume.docx` | Final tailored resume, LLM's can make mistakes so double-check the file
 
 
