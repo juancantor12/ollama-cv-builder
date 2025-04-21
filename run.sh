@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e  # exit immediately if a command exits with a non-zero status
 
+URL=$1
+
 echo "Installing dependencies..."
 make install
 
@@ -13,8 +15,5 @@ make format
 echo "Running unit tests..."
 make test
 
-echo "Building Docker image..."
-make build
-
-echo "Running Docker container..."
-make run
+echo "Running the module"
+make run URL="$URL"
