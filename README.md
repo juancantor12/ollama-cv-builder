@@ -66,21 +66,21 @@ python -m resume_generator.cli tailor
 python -m resume_generator.cli generate
 ```
 
-Or use the provided script:
+Use individual make calls, or use one of the provided scripts:
 ```
-./run.sh "https://some-job-url.com"
+./run.sh "https://some-job-url.com" # For linux soyboys, setting up a virtual environment is strongly recommended
+```
+
+```
+.\run.ps1 https://some-job-url.com 	# For GIGACHADS. Real men code on windows, use no virtual envs and test in production.
 ```
 
 ### Output Structure
 
 Each time you run the pipeline, a **new folder** will be automatically created inside the `output/` directory.
 
-The folder will be named based on:
-- The **position title** extracted from the job description
-- The **company name** extracted from the job description
-- The **timestamp** (formatted as `YYYYMMDD_HHMMSS`)
+The folder will be named using the provided url  
 
-Example folder name: output/data-scientist-acme-corp-20240418_143500/
 Inside each job-specific output folder, you will find:
 
 `summary.txt` | Cleaned and summarized job description
