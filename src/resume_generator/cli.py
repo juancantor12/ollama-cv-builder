@@ -4,7 +4,7 @@ import argparse
 import sys
 from .fetcher import Fetcher
 
-# from summarizer import Summarizer
+from .summarizer import Summarizer
 # from tailor import Tailor
 # from generator import Generator
 
@@ -12,23 +12,27 @@ from .fetcher import Fetcher
 class GeneratorCLI:
 	"""Does."""
 
-	def __init__(self, folder_name: str = ""):
+	def __init__(self, url: str = "", folder_name: str = ""):
+		self.url = url
 		self.folder_name = folder_name
 
 	def fetch(self, url: str) -> None:
 		"""Does."""
-		fetcher = Fetcher(url)
-		success, self.folder_name = fetcher.fetch()
+		print("Fetching...")
+		self.url = url
+		fetcher = Fetcher(self.url)
+		success, folder_name = fetcher.fetch()
+		self.folder_name = folder_name
 		if not success :
-			print(f"Unable to fetch, check the generated file for details: output/{self.folder_name}/html_free_job_details.txt")
+			print(f"Unable to fetch, check the generated file for details: output/{folder_name}/html_free_job_details.txt")
 			sys.exit(1)
 
 	def summarize(self) -> None:
 		"""Does."""
 		print("Summarizing...")
 
-	# 	summarizer = Summarizer()
-	# 	summarizer.summarize()
+		summarizer = Summarizer(self.folder_name)
+		summarizer.summarize()
 
 	def tailor(self) -> None:
 		"""Does."""

@@ -1,10 +1,8 @@
 """Fetchs and cleans an HTML webpage to reduce tokens of the raw page text before model consumption."""
-
-import pathlib
 import re
 from html import unescape
 import requests
-
+from .utils import Utils
 
 class Fetcher:
 	"""Initializes the fetch module"""
@@ -29,23 +27,13 @@ class Fetcher:
 		"""
 		Creates the output folder and saves the text cleaned of html tags on it
 		"""
-		folder_name = ""
-		if "//" in self.url:
-			split = self.url.split("//")
-			split2 = split[1].split("/")
-			folder_name = split2[0].replace(".", "-")
-		else:
-			folder_name = self.url
-
-		path = f"output/{folder_name}"
-		root_path = pathlib.Path(__file__).resolve().parents[2]
-		output_path = root_path / path
-		pathlib.Path(output_path).mkdir(exist_ok=True)
-		with open(f"{path}/html_free_job_details.txt", "a", encoding="utf-8") as file:
+		folder_name = Utils.url_to_folder_name(self.url)
+		output_path = Utils.get_output_path(folder_name, create=True)
+		with open(f"{output_path}/html_free_job_details.txt", "a", encoding="utf-8") as file:
 			cleaned = self.clean_html(raw_html)
 			file.write(cleaned)
 			print(
-				f"HTML free fetched details stored at {path}/html_free_job_details.txt"
+				f"HTML free fetched details stored at {output_path}/html_free_job_details.txt"
 			)
 
 		return folder_name
@@ -61,10 +49,10 @@ class Fetcher:
 		folder_name = self.save_clean_html(
 			f"""
 			Unable to fetch, the server has denied the request.
-			fill this job summary manually and rerun providing same URL but without fetching
-			[.\\run.sh or .\\run.ps1] -url {self.url} -actions summarize-tailor-generate
+			fill this job summary manually and rerun providing same URL but without fetching and summarizing
+			[.\\run.sh or .\\run.ps1] -url {self.url} -actions tailor-generate
 			providing the same url will make the application run using this file, delete this message
-			and fill the data manually copy7pasting the job details from the page.
+			and fill the data manually copypasting the job details from the page.
 			"""
 		)
 		return (False, folder_name)
