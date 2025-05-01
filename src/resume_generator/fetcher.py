@@ -1,11 +1,14 @@
 """Fetchs and cleans an HTML webpage to reduce tokens of the raw page text before model consumption."""
+
 import pathlib
 import re
 from html import unescape
 import requests
 
-class Fetcher():
+
+class Fetcher:
 	"""Initializes the fetch module"""
+
 	def __init__(self, url):
 		self.url = url
 
@@ -14,11 +17,11 @@ class Fetcher():
 		Removes <script>, <style> and <meta> tags completely, replaces other HTML tags with line breaks,
 		removes consecutive line breaks and unescape HTML entities
 		"""
-		html = re.sub(r'<script[\s\S]*?</script>', '', html, flags=re.IGNORECASE)
-		html = re.sub(r'<style[\s\S]*?</style>', '', html, flags=re.IGNORECASE)
-		html = re.sub(r'<meta[^>]*?>', '', html, flags=re.IGNORECASE)
-		html = re.sub(r'<[^>]+>', '\n', html)
-		html = re.sub(r'\n+', '\n', html)
+		html = re.sub(r"<script[\s\S]*?</script>", "", html, flags=re.IGNORECASE)
+		html = re.sub(r"<style[\s\S]*?</style>", "", html, flags=re.IGNORECASE)
+		html = re.sub(r"<meta[^>]*?>", "", html, flags=re.IGNORECASE)
+		html = re.sub(r"<[^>]+>", "\n", html)
+		html = re.sub(r"\n+", "\n", html)
 		cleaned = unescape(html).strip()
 		return cleaned
 
@@ -29,27 +32,39 @@ class Fetcher():
 		folder_name = ""
 		if "//" in self.url:
 			split = self.url.split("//")
-			folder_name = split[1].replace(".", "-")
+			split2 = split[1].split("/")
+			folder_name = split2[0].replace(".", "-")
 		else:
 			folder_name = self.url
 
-		path = f"../../output/{folder_name}"
-		pathlib.Path(path).mkdir(exist_ok=True)
-		with open(f'{path}/html_free_job_details.txt', 'w', encoding='utf-8') as file:
+		path = f"output/{folder_name}"
+		root_path = pathlib.Path(__file__).resolve().parents[2]
+		output_path = root_path / path
+		pathlib.Path(output_path).mkdir(exist_ok=True)
+		with open(f"{path}/html_free_job_details.txt", "a", encoding="utf-8") as file:
 			cleaned = self.clean_html(raw_html)
 			file.write(cleaned)
-			print(f'HTML free fetched details stored at {path}/html_free_job_details.txt')
+			print(
+				f"HTML free fetched details stored at {path}/html_free_job_details.txt"
+			)
 
 		return folder_name
 
-	def fetch(self) -> str:
+	def fetch(self) -> (bool, str):
 		"""
 		Fetches the html from the provided URL and stores the cleaned text
 		"""
 		print(f"Fetching {self.url} with 10 seconds timeout")
 		response = requests.get(self.url, timeout=10)
 		if response.status_code == 200:
-			print(response.text)
-			raw_html = print(self.url)
-			return self.save_clean_html(raw_html)
-		return "error"
+			return (True, self.save_clean_html(response.text))
+		folder_name = self.save_clean_html(
+			f"""
+			Unable to fetch, the server has denied the request.
+			fill this job summary manually and rerun providing same URL but without fetching
+			[.\\run.sh or .\\run.ps1] -url {self.url} -actions summarize-tailor-generate
+			providing the same url will make the application run using this file, delete this message
+			and fill the data manually copy7pasting the job details from the page.
+			"""
+		)
+		return (False, folder_name)
