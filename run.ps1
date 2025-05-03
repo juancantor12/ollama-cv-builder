@@ -1,5 +1,5 @@
 param (
-	[string]$url,	   # Url of the offering, if it cannot be accessed using requests the script will fail
+	[string]$url,	    # Url of the offering, if it cannot be accessed using requests the script will fail
 	[string]$actions,   # Which actions to aperform, if empty, all are executed
 	[switch]$help
 )
@@ -8,9 +8,9 @@ if ($help -or !$url -and !$actions){
 	Write-Host (
 		@(
 			"Usage:",
-			"-url	   The url to fetch the offering data",
+			"-url	    The url to fetch the offering data",
 			"-actions   The list of actions to perform (in given order, dash (-) sepparated, no spaces)",
-			"-help	  Prints help information",
+			"-help	    Prints help information",
 			"Availabe actions: fetch, summarize, tailor, generate, all",
 			"If no actions are provided, all will run",
 			"If no URL is provided, the script will execute the setup (install requirements, lint, format, unit testing)",

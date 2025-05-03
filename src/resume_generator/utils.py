@@ -4,6 +4,9 @@ import re
 
 class Utils:
 	"""Utilities for the CV builder."""
+	def __init__(self, folder_name):
+		self.folder_name = folder_name
+
 	@staticmethod
 	def url_to_folder_name(url: str) -> str:
 		"""Sanitizes an url to be used as a folder name"""
@@ -15,7 +18,7 @@ class Utils:
 
 	@staticmethod
 	def get_output_path(folder_name: str, create: bool = False) -> str:
-		"""Does."""
+		"""Returns the absolute output path for a given folder name."""
 		path = f"output/{folder_name}"
 		root_path = pathlib.Path(__file__).resolve().parents[2]
 		output_path = root_path / path
@@ -25,7 +28,7 @@ class Utils:
 
 	@staticmethod
 	def get_data_path() -> str:
-		"""Does."""
+		"""Returns the absolute data path."""
 		path = "data"
 		root_path = pathlib.Path(__file__).resolve().parents[2]
 		data_path = root_path / path

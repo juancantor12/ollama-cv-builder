@@ -52,7 +52,7 @@ class Fetcher:
 			fill this job summary manually and rerun providing same URL but without fetching and summarizing
 			[.\\run.sh or .\\run.ps1] -url {self.url} -actions tailor-generate
 			providing the same url will make the application run using this file, delete this message
-			and fill the data manually copypasting the job details from the page.
+			and fill the job details manually from the page.
 			"""
 		)
 		return (False, folder_name)

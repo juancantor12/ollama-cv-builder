@@ -87,7 +87,7 @@ Inside each job-specific output folder, you will find:
 
 `tailored_cv.json` | Tailored resume data aligned to the job
 
-`final_resume.docx` | Final tailored resume, LLM's can make mistakes so double-check the file
+`resume.docx` | Final tailored resume, LLM's can make mistakes so double-check the file
 
 
 ---

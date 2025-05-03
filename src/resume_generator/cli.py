@@ -5,8 +5,8 @@ import sys
 from .fetcher import Fetcher
 
 from .summarizer import Summarizer
-from tailor import Tailor
-# from generator import Generator
+from .tailor import Tailor
+from .generator import Generator
 
 
 class GeneratorCLI:
@@ -34,36 +34,35 @@ class GeneratorCLI:
 		summary = summarizer.summarize()
 		return summary
 
-	def tailor(self, summary) -> None:
+	def tailor(self, summary) -> dict:
 		"""Does."""
 		print(f"Tailoring...{summary}")
-
 		tailor = Tailor(self.folder_name)
-		tailor.tailor()
+		return tailor.tailor(summary)
 
-	def generate(self) -> None:
+	def generate(self, tailored_data) -> None:
 		"""Does."""
 		print("Generating...")
-
-	# 	generator = Generator()
-	# 	generator.generate()
+		generator = Generator(self.folder_name)
+		path = generator.generate(tailored_data)
+		print(f"Resume generated: {path}")
 
 	def all(self, url: str) -> None:
 		"""Does."""
 		self.fetch(url)
 		summary = self.summarize()
-		self.tailor(summary)
-		self.generate()
+		tailored_data = self.tailor(summary)
+		self.generate(tailored_data)
 
 
 if __name__ == "__main__":
-	CLI = GeneratorCLI()
-	SWITCH = {
-		"fetch": CLI.fetch,
-		"summarize": CLI.summarize,
-		"tailor": CLI.tailor,
-		"generate": CLI.generate,
-		"all": CLI.all,
+	cli = GeneratorCLI()
+	switch = {
+		"fetch": cli.fetch,
+		"summarize": cli.summarize,
+		"tailor": cli.tailor,
+		"generate": cli.generate,
+		"all": cli.all,
 	}
 	valid_actions = ["fetch", "summarize", "tailor", "generate", "all"]
 	parser = argparse.ArgumentParser(description="AI CV generator")
@@ -79,11 +78,11 @@ if __name__ == "__main__":
 	)
 	args = parser.parse_args()
 	if args.actions == "all" or not args.actions:
-		CLI.all(args.url)
+		cli.all(args.url)
 	else:
 		actions = args.actions.split("-")
 		for action in actions:
-			call = SWITCH.get(action)
+			call = switch.get(action)
 			if action == "fetch":
 				call(args.url)
 			else:
