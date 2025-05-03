@@ -22,3 +22,11 @@ class Utils:
 		if create:
 			pathlib.Path(output_path).mkdir(exist_ok=True)
 		return output_path
+
+	@staticmethod
+	def get_data_path() -> str:
+		"""Does."""
+		path = "data"
+		root_path = pathlib.Path(__file__).resolve().parents[2]
+		data_path = root_path / path
+		return data_path

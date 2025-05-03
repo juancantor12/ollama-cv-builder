@@ -5,7 +5,7 @@ import sys
 from .fetcher import Fetcher
 
 from .summarizer import Summarizer
-# from tailor import Tailor
+from tailor import Tailor
 # from generator import Generator
 
 
@@ -27,19 +27,19 @@ class GeneratorCLI:
 			print(f"Unable to fetch, check the generated file for details: output/{folder_name}/html_free_job_details.txt")
 			sys.exit(1)
 
-	def summarize(self) -> None:
+	def summarize(self) -> str:
 		"""Does."""
 		print("Summarizing...")
-
 		summarizer = Summarizer(self.folder_name)
-		summarizer.summarize()
+		summary = summarizer.summarize()
+		return summary
 
-	def tailor(self) -> None:
+	def tailor(self, summary) -> None:
 		"""Does."""
-		print("Tailoring...")
+		print(f"Tailoring...{summary}")
 
-	# 	tailor = Tailor()
-	# 	tailor.tailor()
+		tailor = Tailor(self.folder_name)
+		tailor.tailor()
 
 	def generate(self) -> None:
 		"""Does."""
@@ -51,8 +51,8 @@ class GeneratorCLI:
 	def all(self, url: str) -> None:
 		"""Does."""
 		self.fetch(url)
-		self.summarize()
-		self.tailor()
+		summary = self.summarize()
+		self.tailor(summary)
 		self.generate()
 
 
