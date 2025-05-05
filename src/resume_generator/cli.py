@@ -1,4 +1,4 @@
-"""Does."""
+"""Entry point for the application."""
 
 import argparse
 import sys
@@ -10,14 +10,14 @@ from .generator import Generator
 
 
 class GeneratorCLI:
-	"""Does."""
+	"""Entry point for the application."""
 
 	def __init__(self, url: str = "", folder_name: str = ""):
 		self.url = url
 		self.folder_name = folder_name
 
 	def fetch(self, url: str) -> None:
-		"""Does."""
+		"""Fetches the job html data from the provided url. Generates a cleaned HTML-free document"""
 		print("Fetching...")
 		self.url = url
 		fetcher = Fetcher(self.url)
@@ -28,27 +28,27 @@ class GeneratorCLI:
 			sys.exit(1)
 
 	def summarize(self) -> str:
-		"""Does."""
+		"""Summarizes the cleaned html job data."""
 		print("Summarizing...")
 		summarizer = Summarizer(self.folder_name)
 		summary = summarizer.summarize()
 		return summary
 
 	def tailor(self, summary) -> dict:
-		"""Does."""
+		"""Takes the cv json data and uptates it based on the information returned by the summarizer."""
 		print(f"Tailoring...{summary}")
 		tailor = Tailor(self.folder_name)
 		return tailor.tailor(summary)
 
 	def generate(self, tailored_data) -> None:
-		"""Does."""
+		"""Takes the cv json tailored data and generates the hopefully ATS friendly docx document."""
 		print("Generating...")
 		generator = Generator(self.folder_name)
 		path = generator.generate(tailored_data)
 		print(f"Resume generated: {path}")
 
 	def all(self, url: str) -> None:
-		"""Does."""
+		"""Perform all of the operations in order."""
 		self.fetch(url)
 		summary = self.summarize()
 		tailored_data = self.tailor(summary)

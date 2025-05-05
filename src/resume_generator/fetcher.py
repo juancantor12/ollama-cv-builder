@@ -5,7 +5,7 @@ import requests
 from .utils import Utils
 
 class Fetcher:
-	"""Initializes the fetch module"""
+	"""Fetchs and cleans an HTML webpage to reduce tokens of the raw page text before model consumption."""
 
 	def __init__(self, url):
 		self.url = url

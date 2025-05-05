@@ -1,9 +1,9 @@
-"""Does."""
+"""Generates an ATS friendly docx file based on the tailored cv json data."""
 from .utils import Utils
 from .docx_factory import DocxFactory
 
 class Generator:
-	"""Does."""
+	"""Generates an ATS friendly docx file based on the tailored cv json data."""
 
 	def __init__(self, folder_name: str = ""):
 		self.folder_name = folder_name
