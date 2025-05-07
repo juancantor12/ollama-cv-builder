@@ -48,6 +48,7 @@ class GeneratorCLI:
         generator = Generator(self.folder_name)
         path = generator.generate(tailored_data)
         print(f"Resume generated: {path}")
+        return path
 
     def all(self, url: str) -> None:
         """Perform all of the operations in order."""
