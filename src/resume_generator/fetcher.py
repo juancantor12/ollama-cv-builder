@@ -25,32 +25,27 @@ class Fetcher:
         cleaned = unescape(html).strip()
         return cleaned
 
-    def save_clean_html(self, raw_html: str) -> str:
+    def save_html_job_details(self, raw_html: str) -> bool:
         """
         Creates the output folder and saves the text cleaned of html tags on it
         """
         folder_name = Utils.url_to_folder_name(self.url)
-        output_path = Utils.get_output_path(folder_name, create=True)
-        with open(
-            f"{output_path}/html_free_job_details.txt", "a", encoding="utf-8"
-        ) as file:
-            cleaned = self.clean_html(raw_html)
-            file.write(cleaned)
-            print(
-                f"HTML free fetched details stored at {output_path}/html_free_job_details.txt"
-            )
+        return Utils.save_file_to_output(
+            folder_name=folder_name,
+            file_name="html_free_job_details.txt",
+            content=self.clean_html(raw_html),
+            create=True,
+        )
 
-        return folder_name
-
-    def fetch(self) -> (bool, str):
+    def fetch(self) -> bool:
         """
         Fetches the html from the provided URL and stores the cleaned text
         """
         print(f"Fetching {self.url} with 10 seconds timeout")
         response = requests.get(self.url, timeout=10)
         if response.status_code == 200:
-            return (True, self.save_clean_html(response.text))
-        folder_name = self.save_clean_html(
+            return self.save_html_job_details(response.text)
+        self.save_html_job_details(
             f"""
 			Unable to fetch, the server has denied the request.
 			fill this job summary manually and rerun providing same URL but without fetching and summarizing
@@ -59,4 +54,4 @@ class Fetcher:
 			and fill the job details manually from the page.
 			"""
         )
-        return (False, folder_name)
+        return True

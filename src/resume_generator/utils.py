@@ -38,3 +38,17 @@ class Utils:
         root_path = pathlib.Path(__file__).resolve().parents[2]
         data_path = root_path / path
         return data_path
+
+    @staticmethod
+    def save_file_to_output(
+        folder_name: str, file_name: str, content: str, create: bool = False
+    ) -> bool:
+        """
+        Saves a file to a subfolder in /output, if the folder doesnt exists it is created
+        """
+        output_path = Utils.get_output_path(folder_name, create=create)
+        with open(f"{output_path}/{file_name}", "w", encoding="utf-8") as file:
+            file.write(content)
+            print(f"Saving to output/{file_name}")
+
+        return True

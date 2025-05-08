@@ -36,7 +36,7 @@ class DocxFactory:
         if "centered" in kwargs and kwargs["centered"]:
             paragraph.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
         text = kwargs["text"].replace("_", " ")
-        if kwargs["uppercase"]:
+        if "uppercase" in kwargs and kwargs["uppercase"]:
             text = text.upper()
         run = paragraph.add_run(text)
         run.bold = kwargs["bold"] if "bold" in kwargs else False
@@ -79,6 +79,6 @@ class DocxFactory:
 
     def save_document(self, output_path: str) -> str:
         """Saves the docx to the specified output path and returns the file path."""
-        file_path = output_path + "/resume.docx"
+        file_path = output_path / "generated_resume.docx"
         self.doc.save(file_path)
         return file_path

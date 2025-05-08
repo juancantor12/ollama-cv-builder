@@ -25,35 +25,41 @@ class Tailor:
             json_data = json.load(file)
         return json_data
 
+    def get_job_summary_data(self) -> str:
+        """Takes the ollama job summary and returns it if found."""
+        output_path = Utils.get_output_path(self.folder_name)
+        with open(
+            f"{output_path}/ollama_job_summary.txt", "r", encoding="utf-8"
+        ) as file:
+            return file.read()
+
+    def save_ollama_tailored_data(self, tailored_data: dict) -> bool:
+        """
+        Saves the ollama tailored_data to a json file in output
+        """
+        return Utils.save_file_to_output(
+            folder_name=self.folder_name,
+            file_name="tailored_cv.json",
+            content=json.dumps(tailored_data, indent=4),
+        )
+
     def get_ollama_tailoring(self, job_summary: str, cv_data: dict) -> str:
-        """Perform the iterative inference on each job experience bullet list to rephrase it based on the job summary."""
+        """Perform iterative inference on each job experience bullet list to rephrase it based on the job summary."""
         history = [
             {
                 "role": "system",
-                "content": "You are a factual rephrasing assistant for an automated resume tailoring system",
-            },
-            {
-                "role": "system",
-                "content": "You will receive short career experience inputs and a related job description.",
-            },
-            {
-                "role": "system",
-                "content": "Your job is to REPHRASE the input experiences to better match the job description",
-            },
-            {
-                "role": "system",
-                "content": "You must strictly adhering to the original facts in the resume and no make up data.",
-            },
-            {
-                "role": "system",
                 "content": (
+                    "You are a factual rephrasing assistant for an automated resume tailoring system"
+                    "You will receive short career experience inputs and a related job description."
+                    "Your job is to REPHRASE the input experiences to better match the job description"
+                    "You must strictly adhering to the original facts in the resume and no make up experience."
                     "CRITICAL RULES: "
-                    "- Do NOT invent, infer, or embellish any new achievements. If it is not related, just write [NA]"
-                    "- ONLY use explicit information present in the original text. "
-                    "- KEEP each output between 20-30 words. "
+                    "- Do NOT invent, infer, or embellish any new achievements. If the entry is not related, write [NA]"
+                    "- ONLY use explicit information present in the original experience. "
+                    "- KEEP each output between 15-30 words. "
                     "- USE action verbs. "
                     "- MAKE it concise, factual, and structured. "
-                    "- AVOID repeating the same changes"
+                    "- AVOID repeating the same changes on different entries"
                     "- DO NOT add summaries, greetings, explanations, or any extra text."
                     "- DO NOT write multiple line texts, keep them SINGLE LINE and SHORT"
                 ),
@@ -61,39 +67,48 @@ class Tailor:
             {"role": "system", "content": f"Target Job Description: {job_summary} "},
             {
                 "role": "system",
-                "content": "If the text is not STRICTLY related to the job, DONT MODIFY it, just return [NA]",
-            },
-            {
-                "role": "system",
-                "content": "remember to keep rephrased texts SHORT AND CONCISE, and SINLGE LINE",
-            },
-            {
-                "role": "system",
-                "content": "Begin when the experience text is provided.",
+                "content": (
+                    "If the text is not STRICTLY related to the job, DONT MODIFY it, just return [NA]"
+                    "remember to keep rephrased texts SHORT, CONCISE and SINLGE LINE"
+                ),
             },
         ]
         for i, experience in enumerate(cv_data.get("experience", [])):
             cv_data["experience"][i]["ollama_bullet_list"] = []
+            instruction = "The next {n} entries belong to a job as a {position} at {company} from {duration}".format(  # pylint: disable=consider-using-f-string
+                n=len(experience.get("bullet_list", [])),
+                position=experience.get("position", ""),
+                company=experience.get("company", ""),
+                duration=experience.get("duration", ""),
+            )
+            history += [
+                {
+                    "role": "system",
+                    "content": (
+                        f"{instruction}"
+                        "Remember, SHORT and FACTUAL rephrasing, if not STRICTLY related to the job, return [NA]"
+                        "DONT REPEAT information already covered in previous entries"
+                        "If the requirements were already covered on another entry just return [NA]"
+                        "The user will start providing this job entries now:."
+                    ),
+                }
+            ]
             for bullet in experience.get("bullet_list", []):
                 response = chat(
                     model="phi4:latest",
                     messages=history
                     + [
-                        {
-                            "role": "system",
-                            "content": "remember, SHORT and FACTUAL rephrasing, if not STRICTLY related to the job, return [NA]",
-                        },
                         {"role": "user", "content": bullet},
                     ],
                     options={
                         "seed": 42,  # To replicate inference and testing, can be removed
-                        "num_keep": -1,  # To not limit the amount of tokens to retain from previous iteration
+                        "num_keep": -1,  # No limit on amount of tokens to retain from previous iteration
                         "num_predict": 48,  # Aiming for short outputs
                         "top_k": 20,  # Give mor freedom for the model to choose
-                        "top_p": 0.35,  # Pick only really probably tokens, to avoid the model making up stacks
+                        "top_p": 0.35,  # Pick only probably tokens, to avoid the model making up stacks
                         "temperature": 0.3,  # low temperature to keep the model factual
                         "frequency_penalty": 2.0,  # High frequency penalty, tied with no limit on num_keep
-                        "presence_penalty": 2.0,  # High presence penalty, trying to avoid de model to overfit for the job
+                        "presence_penalty": 2.0,  # High presence penalty, to avoid de model to overfit for the job
                         "num_ctx": 8192,  # Max context, can be changed depending on the hardware
                         "stop": [
                             "[Na]",
@@ -103,25 +118,23 @@ class Tailor:
                     },
                 )
                 history += [
-                    {"role": "user", "content": bullet},
-                    {"role": "assistant", "content": response.message.content},
+                    {
+                        "role": "system",
+                        "content": (
+                            f"The user provided this entry: {bullet}"
+                            f"You rephrased it to: {response.message.content}"
+                            "You should not repeat this same rephrasing on future entries"
+                        )
+                    }
                 ]
-                content = (
-                    response.message.content
-                    if response.message.content != ""
-                    else bullet
-                )  # If no output, keep the bullet
                 cv_data["experience"][i]["ollama_bullet_list"].append(
-                    content
+                    response.message.content
                 )  # Ollama results are stored separately
         return cv_data
 
-    def tailor(self, job_summary) -> dict:
+    def tailor(self) -> None:
         """Entry point for the tailor module, stores and returns the tailored data."""
         cv_data = self.get_cv_json_data()
+        job_summary = self.get_job_summary_data()
         tailored_data = self.get_ollama_tailoring(job_summary, cv_data)
-        output_path = Utils.get_output_path(self.folder_name, create=False)
-        with open(f"{output_path}/tailored_cv.json", "w", encoding="utf-8") as file:
-            json.dump(tailored_data, file, indent=4)
-
-        return tailored_data
+        self.save_ollama_tailored_data(tailored_data)

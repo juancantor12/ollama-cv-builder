@@ -72,7 +72,7 @@ Use individual make calls, or use one of the provided scripts:
 ```
 
 ```
-.\run.ps1 https://some-job-url.com 	# For GIGACHADS. Real men code on windows, use no virtual envs and test in production.
+.\run.ps1 -url https://some-job-url.com 	# For GIGACHADS. Real men code on windows, use no virtual envs and test in production.
 ```
 
 ### Output Structure

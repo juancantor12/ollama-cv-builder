@@ -1,2 +1,5 @@
 [tool.pytest.ini_options]
-pythonpath = ["src"]
+pythonpath = ["src"]								# For pytest to know where to import modules from
+
+[tool.pylint]
+init-hook = "import sys; sys.path.append('src')" 	# For my editor linter (sublime/pylint) to handle imports

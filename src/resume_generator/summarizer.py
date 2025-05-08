@@ -12,13 +12,23 @@ class Summarizer:
 
     def get_raw_offering_data(self) -> str:
         """Takes the html-free fetched job data and returns it if found."""
-        output_path = Utils.get_output_path(self.folder_name, create=False)
+        output_path = Utils.get_output_path(self.folder_name)
         raw_data = "Raw data was not found"
         with open(
             f"{output_path}/html_free_job_details.txt", "r", encoding="utf-8"
         ) as file:
             raw_data = file.read()
         return raw_data
+
+    def save_ollama_job_summary(self, summary: str) -> bool:
+        """
+        Saves the ollama generated summary to a text file in output
+        """
+        return Utils.save_file_to_output(
+            folder_name=self.folder_name,
+            file_name="ollama_job_summary.txt",
+            content=summary,
+        )
 
     def get_ollama_summary(self, raw_info: str) -> str:
         """Performs the inference to summarize the html-free fetched data"""
@@ -33,7 +43,7 @@ class Summarizer:
                     "role": "assistant",
                     "content": """
 						The user will provide me raw data from a crawled online job posting,
-						he wants me to clear it up on a more readable format along a tex-based description of the job
+						he wants me to clear up the HTML and provide a text summary of the job offer
 					""",
                 },
                 {"role": "user", "content": raw_info},
@@ -50,8 +60,8 @@ class Summarizer:
         )
         return response.message.content
 
-    def summarize(self) -> str:
+    def summarize(self) -> None:
         """Returns the summarized job description."""
         raw_fetched_info = self.get_raw_offering_data()
         summary = self.get_ollama_summary(raw_fetched_info)
-        return summary
+        self.save_ollama_job_summary(summary)
