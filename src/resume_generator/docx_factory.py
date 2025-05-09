@@ -1,4 +1,5 @@
 """Utilities for the generation of the docx file."""
+
 from pathlib import Path
 from docx import Document
 from docx.shared import Pt
@@ -7,6 +8,7 @@ from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 from docx.oxml.ns import qn
 from docx.oxml import OxmlElement
 from docx.text.paragraph import Paragraph
+
 
 class DocxFactory:
     """Utilities for the generation of the docx file."""

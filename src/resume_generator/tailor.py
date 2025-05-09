@@ -124,7 +124,7 @@ class Tailor:
                             f"The user provided this entry: {bullet}"
                             f"You rephrased it to: {response.message.content}"
                             "You should not repeat this same rephrasing on future entries"
-                        )
+                        ),
                     }
                 ]
                 cv_data["experience"][i]["ollama_bullet_list"].append(

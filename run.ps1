@@ -28,13 +28,13 @@ function fn_format {
 
 function fn_test {
     Write-Host "Running unit tests..."
-    pytest tests/
+    pytest tests/ -vv
 }
 
 function fn_setup {
     fn_install
-    fn_lint
     fn_format
+    fn_lint
     fn_test
 }
 
@@ -45,7 +45,7 @@ if ($help){
             "-url      {str}  The url to fetch the offering data",
             "-actions  {list[str]}   The list of actions to perform (in given order, dash (-) sepparated, no spaces)",
             "-help     Prints help information",
-            "-setup    Install, lint, format and test",
+            "-setup    Install, formats, lints and test",
             "-install  Installs dependencies",
             "-lint     Lint the code with ruff",
             "-format   Format the code with black",

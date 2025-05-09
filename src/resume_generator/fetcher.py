@@ -54,4 +54,4 @@ class Fetcher:
 			and fill the job details manually from the page.
 			"""
         )
-        return True
+        return False

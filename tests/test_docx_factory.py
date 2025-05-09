@@ -1,9 +1,11 @@
-"""CLI orchestration unit testing."""
+"""Dox Factory unit testing."""
+
 from pathlib import Path
 from unittest.mock import patch, MagicMock
 from docx.shared import Pt
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 from resume_generator.docx_factory import DocxFactory
+
 
 @patch("docx.document.Document.add_paragraph")
 def test_add_text(mock_add_paragraph):
@@ -20,7 +22,7 @@ def test_add_text(mock_add_paragraph):
         uppercase=True,
         bold=False,
         italic=False,
-        font_size=15
+        font_size=15,
     )
     mock_add_paragraph.assert_called_once()
     # The next assert implicitly tests that paragraph is an instance of docx.text.paragraph.Paragraph
@@ -31,9 +33,11 @@ def test_add_text(mock_add_paragraph):
     assert mock_run.italic is False
     assert mock_run.font.size == Pt(15)
 
+
 def test_bulleted():
     """Tests that a given string is returned in bullet format, just for test coverage."""
     assert "  •  bullet" == DocxFactory.bulleted("bullet")
+
 
 @patch("docx.document.Document.add_paragraph")
 def test_add_line_breaks(mock_add_paragraph):
