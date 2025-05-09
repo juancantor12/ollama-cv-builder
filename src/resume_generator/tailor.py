@@ -88,7 +88,7 @@ class Tailor:
                         f"{instruction}"
                         "Remember, SHORT and FACTUAL rephrasing, if not STRICTLY related to the job, return [NA]"
                         "DONT REPEAT information already covered in previous entries"
-                        "If the requirements were already covered on another entry just return [NA]"
+                        "If the requirements were already covered on previous entries just return [NA]"
                         "The user will start providing this job entries now:."
                     ),
                 }

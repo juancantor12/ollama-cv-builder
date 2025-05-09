@@ -1,5 +1,5 @@
 """Utilities for the generation of the docx file."""
-
+from pathlib import Path
 from docx import Document
 from docx.shared import Pt
 from docx.shared import Inches
@@ -7,7 +7,6 @@ from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 from docx.oxml.ns import qn
 from docx.oxml import OxmlElement
 from docx.text.paragraph import Paragraph
-
 
 class DocxFactory:
     """Utilities for the generation of the docx file."""
@@ -77,7 +76,7 @@ class DocxFactory:
         for _ in range(amount):
             self.doc.add_paragraph()
 
-    def save_document(self, output_path: str) -> str:
+    def save_document(self, output_path: Path) -> str:
         """Saves the docx to the specified output path and returns the file path."""
         file_path = output_path / "generated_resume.docx"
         self.doc.save(file_path)
