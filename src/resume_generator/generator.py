@@ -23,10 +23,10 @@ class Generator:
         self.docx_factory.add_text(
             text=profile["name"], bold=True, uppercase=True, font_size=18, centered=True
         )
-        info_line = f'{profile["tittle"]} | {profile["location"]} | {profile["email"]}'
+        info_line = f'{profile["title"]} | {profile["location"]} | {profile["email"]}'
         self.docx_factory.add_text(text=info_line, font_size=12, centered=True)
 
-    def write_education(self, educations: dict) -> None:
+    def write_education(self, educations: list) -> None:
         """Writes the education info into the document."""
         self.docx_factory.add_text(
             text="EDUCATION", bold=True, uppercase=True, font_size=13
@@ -45,7 +45,7 @@ class Generator:
 
             self.docx_factory.add_line_breaks(1)
 
-    def write_experience(self, experiences: dict) -> None:
+    def write_experience(self, experiences: list) -> None:
         """Writes the experience info into the document."""
         self.docx_factory.add_text(
             text="EXPERIENCE", bold=True, uppercase=True, font_size=13

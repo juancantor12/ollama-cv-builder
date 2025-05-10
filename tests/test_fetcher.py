@@ -1,4 +1,4 @@
-"""Does."""
+"""Tests for the fetcher submodule."""
 
 from unittest.mock import patch, MagicMock
 from resume_generator.fetcher import Fetcher
