@@ -17,7 +17,7 @@ class Tailor:
     def __init__(self, folder_name: str = ""):
         self.folder_name = folder_name
 
-    def get_cv_json_data(self) -> str:
+    def get_cv_json_data(self) -> dict:
         """Takes the CV data and returns it if it exists."""
         data_path = Utils.get_data_path()
         json_data = {}
@@ -43,7 +43,7 @@ class Tailor:
             content=json.dumps(tailored_data, indent=4),
         )
 
-    def get_ollama_tailoring(self, job_summary: str, cv_data: dict) -> str:
+    def get_ollama_tailoring(self, job_summary: str, cv_data: dict) -> dict:
         """Perform iterative inference on each job experience bullet list to rephrase it based on the job summary."""
         history = [
             {
