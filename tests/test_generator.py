@@ -137,27 +137,27 @@ def test_write_others(mock_add_text, mock_add_horizontal_line, mock_add_line_bre
 @patch("resume_generator.generator.Generator.get_tailored_data_file")
 def test_generate(  # pylint: disable=too-many-arguments
     mock_get_tailored_data_file,
-    _mock_write_profile,
-    _mock_write_education,
-    _mock_write_experience,
-    _mock_write_others,
+    mock_write_profile,
+    mock_write_education,
+    mock_write_experience,
+    mock_write_others,
     mock_get_output_path,
-    _mock_save_document
+    mock_save_document,
 ):
     """Test the correct execution of Generators methods when calling .generate."""
     test_folder_name = "example.com"
     test_data = {"profile_info": 1, "education": 2, "experience": 3}
-    # sections = ["continuous_learning", "personal_projects", "personal_development"]
+    sections = ["continuous_learning", "personal_projects", "personal_development"]
     test_path = "/path"
-    generator = Generator(test_folder_name)
-    _returned_path = generator.generate()
     mock_get_tailored_data_file.return_value = test_data
     mock_get_output_path.return_value = test_path
+    generator = Generator(test_folder_name)
+    returned_path = generator.generate()
     mock_get_tailored_data_file.assert_called_once_with()
-    # mock_write_profile.assert_called_once_with(1)
-    # mock_write_education.assert_called_once_with(2)
-    # mock_write_experience.assert_called_once_with(3)
-    # mock_write_others.assert_called_once_with(test_data, sections)
+    mock_write_profile.assert_called_once_with(1)
+    mock_write_education.assert_called_once_with(2)
+    mock_write_experience.assert_called_once_with(3)
+    mock_write_others.assert_called_once_with(test_data, sections)
     mock_get_output_path.assert_called_once_with(test_folder_name)
-    # mock_save_document.assert_called_once_with(test_path)
-    # assert returned_path == test_path
+    mock_save_document.assert_called_once_with(test_path)
+    assert returned_path == test_path
