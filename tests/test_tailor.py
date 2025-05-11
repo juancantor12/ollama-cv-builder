@@ -5,7 +5,7 @@ The following functions are not covered because they are too trivial:
 """
 
 import json
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock
 from resume_generator.tailor import Tailor
 
 
@@ -47,9 +47,20 @@ def test_get_job_summary_data(mock_get_output_path, mock_open):
     assert summary_data == test_data
 
 
-def test_get_ollama_tailoring():  # TODO
+@patch("resume_generator.tailor.chat")
+def test_get_ollama_tailoring(mock_chat):
     """Test the entire inference flow mocking ollama chat calls."""
-    assert True
+    test_job_summary, bullets = "test job summary", ["x", "y"]
+    test_cv_data = {
+        "experience": [
+            {"bullet_list": bullets, "position": "a", "company": "b", "duration": "c"}
+        ]
+    }
+    mock_chat.return_value = MagicMock()
+    mock_chat.return_value.message.content = "tb"
+    tailor = Tailor("example.com")
+    mock_tailored_data = tailor.get_ollama_tailoring(test_job_summary, test_cv_data)
+    assert mock_tailored_data["experience"][0]["ollama_bullet_list"] == ["tb", "tb"]
 
 
 @patch("resume_generator.tailor.Tailor.save_ollama_tailored_data")
