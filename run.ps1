@@ -11,31 +11,17 @@ param (
 )
 $ErrorActionPreference = "Stop"
 
-function fn_install {
-    Write-Host "Installing dependencies..."
-    pip install -r requirements.txt
-}
-
-function fn_lint {
-    Write-Host "Linting code..."
-    ruff check src/ tests/
-}
-
-function fn_format {
-    Write-Host "Checking format..."
-    black src/ tests/
-}
-
-function fn_test {
-    Write-Host "Running unit tests..."
-    pytest tests/ -vv
-}
-
-function fn_setup {
-    fn_install
-    fn_format
-    fn_lint
-    fn_test
+function Execute-Action {
+    param (
+        [string]$action
+    )
+    Write-Host "$action..."
+    switch ($action) {
+        "install" { pip install -r requirements.txt }
+        "lint" { ruff check src/ tests/ }
+        "format" { black src/ tests/ }
+        "test" { pytest tests/ -vv }
+    }
 }
 
 if ($help){
@@ -60,29 +46,13 @@ if ($help){
     exit 0
 }
 
-if ($install) { 
-    fn_install
-    exit 0
-}
-
-if ($lint) {
-    fn_lint
-    exit 0
-}
-
-if ($format) {
-    fn_format
-    exit 0
-}
-
-if ($test) {
-    fn_test
-    exit 0
-}
-
-if ($setup) {
-    fn_setup
-    exit 0
+if ($install) { Execute-Action -action "install"; exit }
+if ($lint) { Execute-Action -action "lint"; exit }
+if ($format) { Execute-Action -action "format"; exit }
+if ($test) { Execute-Action -action "test"; exit }
+if ($setup) { 
+    "install", "format", "lint", "test" | ForEach-Object { Execute-Action -action $_ }
+    exit 
 }
 
 if ($URL) {
