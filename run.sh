@@ -18,22 +18,35 @@ function show_help() {
 }
 
 execute_action() {
-    setup_steps=("install" "lint" "format" "test")
+    setup_steps=("-install" "-lint" "-format" "-test")
     case $1 in
         "-install") pip install -r requirements.txt ;;
         "-lint") ruff check src/ tests/ ;;
         "-format") black src/ tests/ ;;
         "-test") pytest tests/ -vv ;;
 	"-setup")
-	    for step in setup_steps; do
-		execute_action "$arg"
+	    for step in "${setup_steps[@]}"; do
+		execute_action "$step"
 	    done
 	 ;;
 	"-help") show_help 
     esac
 }
 
-# Parse the arguments
+if [ "$1" = "-url" ]; then
+    if [ -z "$2" ]; then
+	echo "-url parameter provided but no url value found."
+	exit 1
+    elif [ -z "$3" -o "$3" != "-actions" ]; then
+	python -m src.resume_generator.cli --url "$2" --actions all
+	exit 0
+    elif [ -n "$3" -a "$3" = "-actions" -a -n "$4" ]; then
+	python -m src.resume_generator.cli --url "$2" --actions "$4"
+	exit 0
+    fi
+fi
+
+# Other params
 for arg in "$@"; do
     case "$arg" in
         -*) 
