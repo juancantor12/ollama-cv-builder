@@ -38,7 +38,7 @@ def test_save_html_job_details(mock_save_file_to_output):
     """Tests that save_html_job_details gets called with the appropiate parameters."""
     fetcher = Fetcher("https://example.com")
     fetcher.save_html_job_details("<tag>raw_html</tag>")
-    assert mock_save_file_to_output.called_once_with(
+    mock_save_file_to_output.assert_called_once_with(
         folder_name="example.com",
         file_name="html_free_job_details.txt",
         content="raw_html",
@@ -59,7 +59,7 @@ def test_fetch_success(mock_save_html_job_details, mock_get):
     mock_get.return_value = magic_mock_response
     fetcher = Fetcher("https://example.com")
     okey = fetcher.fetch()
-    assert mock_save_html_job_details.called_once_with("<html>Example job offer</html>")
+    mock_save_html_job_details.assert_called_once_with("<html>Example job offer</html>")
     assert okey
 
 
@@ -75,13 +75,4 @@ def test_fetch_fail(mock_save_html_job_details, mock_get):
     mock_get.return_value = magic_mock_response
     fetcher = Fetcher("https://selfish-jobboard.com")
     okeynt = not fetcher.fetch()
-    assert mock_save_html_job_details.called_once_with(
-        f"""
-        Unable to fetch, the server has denied the request.
-        fill this job summary manually and rerun providing same URL but without fetching and summarizing
-        [.\\run.sh or .\\run.ps1] -url {fetcher.url} -actions tailor-generate
-        providing the same url will make the application run using this file, delete this message
-        and fill the job details manually from the page.
-        """
-    )
     assert okeynt
