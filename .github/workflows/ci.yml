@@ -11,15 +11,27 @@ jobs:
       uses: actions/setup-python@v4
       with:
         python-version: '3.11'
+
     - name: Install dependencies
       run: |
-        pip install -r requirements.txt
-    - name: Lint
+        make install-dependencies
+
+    - name: Format code (black)
       run: |
-        make lint
-    - name: Format
+        make format-code
+
+    - name: Lint code (ruff)
       run: |
-        make format
-    - name: Test
+        make lint-code
+
+    - name: Security linter (bandit)
       run: |
-        make test
+        make check-code-security
+
+    - name: Dependencies vulnerabilities (safety)
+      run: |
+        make check-dependencies-vulnerabilities
+
+    - name: Unit testing
+      run: |
+        make unit-testing

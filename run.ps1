@@ -4,8 +4,10 @@ param (
     [switch]$help,
     [switch]$setup,
     [switch]$install,
-    [switch]$lint,
     [switch]$format,
+    [switch]$lint,
+    [switch]$security,
+    [switch]$audit,
     [switch]$test
 
 )
@@ -18,8 +20,10 @@ function Execute-Action {
     Write-Host "$action..."
     switch ($action) {
         "install" { pip install -r requirements.txt }
-        "lint" { ruff check src/ tests/ }
         "format" { black src/ tests/ }
+        "lint" { ruff check src/ tests/ }
+        "security" { bandit -r src/ }
+        "audit" { pip-audit -r requirements.txt }
         "test" { pytest tests/ -vv }
     }
 }
@@ -28,14 +32,16 @@ if ($help){
     Write-Host (
         @(
             "Usage:",
-            "-url      {str}  The url to fetch the offering data",
-            "-actions  {list[str]}   The list of actions to perform (in given order, dash (-) sepparated, no spaces)",
-            "-help     Prints help information",
-            "-setup    Install, formats, lints and test",
+            "-url      The URL to fetch the offering data (required for running the app).",
+            "-actions  List of actions to perform (dash-separated, no spaces). Defaults to 'all'.",
             "-install  Installs dependencies",
-            "-lint     Lint the code with ruff",
-            "-format   Format the code with black",
-            "-test     Runs unit testing with pytest",
+            "-format   Format the code with black.",
+            "-lint     Lint the code with ruff.",
+            "-security Check code security with bandit.",
+            "-audit    Check dependencies vulnerabilities with pip-audit.",
+            "-test     Run unit tests with pytest",
+            "-setup    Run install, format, lint, security, audit and test.",
+            "-help     Show this help message."
             "",
             "Availabe actions: fetch, summarize, tailor, generate, all",
             "If no actions are provided, all will run",
@@ -47,11 +53,13 @@ if ($help){
 }
 
 if ($install) { Execute-Action -action "install"; exit }
-if ($lint) { Execute-Action -action "lint"; exit }
 if ($format) { Execute-Action -action "format"; exit }
+if ($lint) { Execute-Action -action "lint"; exit }
+if ($security) { Execute-Action -action "security"; exit }
+if ($audit) { Execute-Action -action "audit"; exit }
 if ($test) { Execute-Action -action "test"; exit }
 if ($setup) { 
-    "install", "format", "lint", "test" | ForEach-Object { Execute-Action -action $_ }
+    "install", "format", "lint", "security", "audit", "test" | ForEach-Object { Execute-Action -action $_ }
     exit 
 }
 

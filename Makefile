@@ -1,30 +1,38 @@
 # .PHONY specifies names that are to be treated as commands and not files
-.PHONY: install lint format test run setup all
+.PHONY: install-dependencies \
+		format-code \
+		lint-code \
+		check-code-security \
+		check-dependencies-vulnerabilities \
+		unit-testing
 
-ACTIONS ?= all # ?= assigns a default value if the variable hasn't been set before
-
-install:
+install-dependencies:
 	@echo "Installing dependencies..."
 	pip install -r requirements.txt
 
-lint:
-	@echo "Linting code..."
-	ruff check src/ tests/
-
-format:
+format-code:
 	@echo "Formatting code..."
 	black src/ tests/
 
-test:
-	@echo "Running tests..."
+lint-code:
+	@echo "Linting code..."
+	ruff check src/ tests/
+
+check-code-security:
+	@echo "Checking code security..."
+	bandit -r src/
+
+check-dependencies-vulnerabilities:
+	@echo "Checking dependencies vulnerabilities..."
+	safety scan --full-report
+
+unit-testing:
+	@echo "Running unit tests..."
 	pytest tests/ -vv
 
-run:
-	@echo "Running with actions: $(ACTIONS)"
-	@if [ -z "$(URL)" ]; then \
-		echo "Error: URL is required for the 'run' action."; \
-		exit 1; \
-	fi
-	python -m src.resume_generator.cli --url $(URL) --actions $(ACTIONS)
-
-setup: install format lint test
+setup:	install-dependencies \
+		format-code \
+		lint-code \
+		check-code-security \
+		check-dependencies-vulnerabilities \
+		unit-testing
