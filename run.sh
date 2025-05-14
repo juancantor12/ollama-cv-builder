@@ -2,16 +2,17 @@
 set -e  # Exit immediately if any command exits with a non-zero status
 function show_help() {
     echo "Usage:"
-    echo "-url      The URL to fetch the offering data (required for running the app)."
-    echo "-actions  List of actions to perform (dash-separated, no spaces). Defaults to 'all'."
-    echo "-install  Installs dependencies."
-    echo "-format   Format the code with black."
-    echo "-lint     Lint the code with ruff."
-    echo "-security Check code security with bandit."
-    echo "-audit    Check dependencies vulnerabilities with pip-audit."
-    echo "-test     Run unit tests with pytest."
-    echo "-setup    Run install, format, lint, security, audit and test."
-    echo "-help     Show this help message."
+    echo "-url       The URL to fetch the offering data (required for running the app)."
+    echo "-actions   List of actions to perform (dash-separated, no spaces). Defaults to 'all'."
+    echo "-install   Installs dependencies."
+    echo "-format    Format the code with black."
+    echo "-lint      Lint the code with ruff."
+    echo "-security  Check code security with bandit."
+    echo "-audit     Check dependencies vulnerabilities with pip-audit."
+    echo "-test      Run unit tests with pytest."
+    echo "-setup     Run install, format, lint, security, audit and test."
+    echo "-precommit Run format, lint, security, audit and test"
+    echo "-help      Show this help message."
     echo ""
     echo "Availabe actions: fetch, summarize, tailor, generate, all",
     echo ""
@@ -20,7 +21,8 @@ function show_help() {
 }
 
 execute_action() {
-    setup_steps=("-install" "-lint" "-format" "-test")
+    precommit_steps=("-format" "-lint" "-security" "-audit" "-test")
+    setup_steps=("-install" "-format" "-lint" "-security" "-audit" "-test")
     case $1 in
         "-install") make install-dependencies ;;
         "-format") make format-code ;;
@@ -28,12 +30,17 @@ execute_action() {
         "-security") make check-code-security ;;
         "-audit") make check-dependencies-vulnerabilities ;;
         "-test") make unit-testing ;;
-	"-setup")
-	    for step in "${setup_steps[@]}"; do
-		execute_action "$step"
-	    done
-	 ;;
-	"-help") show_help 
+    	"-precommit")
+    	    for step in "${precommit_steps[@]}"; do
+    		execute_action "$step"
+    	    done
+    	 ;;
+         "-setup")
+            for step in "${setup_steps[@]}"; do
+            execute_action "$step"
+            done
+         ;;
+    	"-help") show_help 
     esac
 }
 

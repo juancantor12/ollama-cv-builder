@@ -15,13 +15,13 @@ It parses a job description fetched from a URL, summarizes key requirements, and
 - **Fully Local** — No external API calls. All processing happens locally.
 - **Privacy-First** — Protects your data and job applications from third-party services.
 - **LLM-Driven Tailoring** — Summarizes job descriptions and optimizes your resume using a local LLM.
-- **DOCX Resume Output** — Creates professional, ATS-compliant resume files.
-- **DevSecOps Friendly** — Includes CI/CD pipelines, linting, testing, and security scanning.
+- **DOCX Resume Output** — Creates professional, ATS-friendly resume documents.
+- **DevSecOps Friendly** — Includes CI/CD pipelines, formating, linting, testing, and security scanning.
 
 ---
 
 
-## Quick Start
+## Setup
 
 ### 1. Clone the repository
 
@@ -29,19 +29,29 @@ It parses a job description fetched from a URL, summarizes key requirements, and
 git clone https://github.com/juancantor12/ollama-cv-builder.git
 cd ollama-cv-builder
 ```
-### 2. Install dependencies
+### 2. Seup environment, either with run.sh on lunux or run.ps1 on windows  
+For linux soyboys it's advised to setup a virtual environment and activate it first.  
 
 ```
-make install
+./run.sh -setup
+```
+or well
+```
+./run.ps1 -setup	# For windows dev gigachads, no venv
 ```
 
-### 3. Lint, format, and test
+## You can optionally run each steps by your own
 
 ```
-make lint
-make format
-make test
+./run.sh -install
 ```
+or
+```
+./run.ps1 -test
+```
+
+This linux bash script uses a make file underneath, steps could also be made using make directly.
+Both windows and linux run files provide a -help option for more details.
 
 ---
 
@@ -57,38 +67,37 @@ Before running the application, you must provide your structured resume informat
 
 > Example files (`cv_info_example.json`) are provided.
 
-After setting up, you can run the CLI directly:
-```
-cd src
-python -m resume_generator.cli fetch https://some-job-url.com
-python -m resume_generator.cli summarize
-python -m resume_generator.cli tailor
-python -m resume_generator.cli generate
-```
-
-Use individual make calls, or use one of the provided scripts:
-```
-./run.sh "https://some-job-url.com" # For linux soyboys, setting up a virtual environment is strongly recommended
-```
+After setting up, you can use one of the provided scripts for linux or windows respectively:
 
 ```
-.\run.ps1 -url https://some-job-url.com 	# For GIGACHADS. Real men code on windows, use no virtual envs and test in production.
+./run.sh -url https://example.com -actions fetch-summarize
+```
+```
+.\run.ps1 -url https://example.com -actions tailor-generate
+```
+
+Or run the CLI directly:
+```
+python -m src.resume_generator.cli --url https://example.com --actions fetch-summarize-tailor-generate
 ```
 
 ### Output Structure
 
 Each time you run the pipeline, a **new folder** will be automatically created inside the `output/` directory.
 
-The folder will be named using the provided url  
+The folder will be named based on the provided url  
 
 Inside each job-specific output folder, you will find:
 
-`summary.txt` | Cleaned and summarized job description
+`html_free_job_details.txt` | Fetched job details stripped of most html tags  
 
-`tailored_cv.json` | Tailored resume data aligned to the job
+`ollama_job_summary.txt` | Cleaned and summarized job description  
 
-`resume.docx` | Final tailored resume, LLM's can make mistakes so double-check the file
+`tailored_cv.json` | Tailored (experience) resume data aligned to the job in json format  
 
+`generated_resume.docx` | Final tailored resume, LLM's can make mistakes so double-check the file  
+
+The tailoring process adds a "ollama_bullet_list" sections with the llm suggestions, the generator will use these but all the original entries will be preserved on this file.
 
 ---
 
@@ -98,6 +107,15 @@ This app assumes you have:
 
 - Ollama installed and running locally.
 - A model of your choice pulled and available.
+
+---
+
+### Roadmap & changelog
+
+Im planning on adding an interface to generate the original cv json data from a provided docx or pdf file, and to have a user interface wizzard for the whole process, allowing the user to make changes along the way.  
+I won't be working on this in the near future tough  
+
+I disabled pip-audit on the github workflow CI because it takes a lot of time but it still runs locally when calling any of the run scripts with the -audit flag
 
 ---
 
