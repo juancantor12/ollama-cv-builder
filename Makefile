@@ -24,7 +24,7 @@ check-code-security:
 
 check-dependencies-vulnerabilities:
 	@echo "Checking dependencies vulnerabilities..."
-	safety scan --full-report
+	pip-audit -r requirements.txt
 
 unit-testing:
 	@echo "Running unit tests..."

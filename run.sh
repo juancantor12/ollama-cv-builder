@@ -8,9 +8,9 @@ function show_help() {
     echo "-format   Format the code with black."
     echo "-lint     Lint the code with ruff."
     echo "-security Check code security with bandit."
-    echo "-safety   Check dependencies vulnerabilities with safety."
+    echo "-audit    Check dependencies vulnerabilities with pip-audit."
     echo "-test     Run unit tests with pytest."
-    echo "-setup    Run install, format, lint, security, safety and test."
+    echo "-setup    Run install, format, lint, security, audit and test."
     echo "-help     Show this help message."
     echo ""
     echo "Availabe actions: fetch, summarize, tailor, generate, all",
@@ -26,7 +26,7 @@ execute_action() {
         "-format") make format-code ;;
         "-lint") make lint-code ;;
         "-security") make check-code-security ;;
-        "-safety") make check-dependencies-vulnerabilities ;;
+        "-audit") make check-dependencies-vulnerabilities ;;
         "-test") make unit-testing ;;
 	"-setup")
 	    for step in "${setup_steps[@]}"; do

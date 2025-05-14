@@ -28,7 +28,7 @@ jobs:
       run: |
         make check-code-security
 
-    - name: Dependencies vulnerabilities (safety)
+    - name: Dependencies vulnerabilities (pip-audit)
       run: |
         make check-dependencies-vulnerabilities
 
