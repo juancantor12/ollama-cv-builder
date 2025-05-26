@@ -42,9 +42,9 @@ class Summarizer:
                 {
                     "role": "assistant",
                     "content": """
-						The user will provide me raw data from a crawled online job posting,
-						he wants me to clear up the HTML and provide a text summary of the job offer
-					""",
+                        The user will provide me raw data from a crawled online job posting,
+                        he wants me to clear up the HTML and provide a text summary of the job offer
+                    """,
                 },
                 {"role": "user", "content": raw_info},
             ],
